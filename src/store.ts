@@ -1,9 +1,12 @@
-import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import counterReducer from '../features/counter/counterSlice';
+import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
+import userReducer from "./reducers/userSlice";
+import waxReducer from "./reducers/waxSlice";
 
 export const store = configureStore({
   reducer: {
-    counter: counterReducer,
+    wax: waxReducer,
+    user: userReducer,
+    // templates: templatesReducer,
   },
 });
 
