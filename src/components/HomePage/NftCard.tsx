@@ -15,16 +15,9 @@ import InfoIcon from "@material-ui/icons/Info";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import CheckIcon from "@material-ui/icons/Check";
 import CloseIcon from "@material-ui/icons/Close";
+import { NFT } from "../../reducers/NFTsSlice";
 
-interface Props {
-  templateId?: string;
-  templateName?: string;
-  schemeName?: string;
-  description?: string;
-  img?: string;
-  maxSupply?: number;
-  mint?: number;
-}
+interface Props extends NFT {}
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -83,11 +76,11 @@ const NftCard = (props: Props) => {
     schemeName = "spinningcoin",
     description = "Synthetix Human or synthetic Human? Ill let you decide!",
     img = "QmR8kTQvMRtqzGY2ZAuXz3Dk5n4nhYwD8BTwDMWSDGRU5p",
-    maxSupply = 500,
-    mint = 125,
+    maxSupply = "500",
+    mint = "125",
   } = props;
 
-  const MintChip: ({ mint }: { mint: number | undefined }) => JSX.Element = ({
+  const MintChip: ({ mint }: { mint: string | undefined }) => JSX.Element = ({
     mint,
   }) => {
     return (
