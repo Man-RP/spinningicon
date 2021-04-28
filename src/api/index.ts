@@ -26,7 +26,6 @@ export const getAllTemplates = async () => {
       mint: undefined,
     });
   }
-  console.log(res);
 
   return res;
 };
