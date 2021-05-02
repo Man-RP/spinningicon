@@ -1,6 +1,4 @@
-import React from "react";
 import {
-  Button,
   Card,
   CardActions,
   CardContent,
@@ -11,10 +9,11 @@ import {
   Tooltip,
   Typography,
 } from "@material-ui/core";
-import InfoIcon from "@material-ui/icons/Info";
-import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import CheckIcon from "@material-ui/icons/Check";
 import CloseIcon from "@material-ui/icons/Close";
+import InfoIcon from "@material-ui/icons/Info";
+import OpenInNewIcon from "@material-ui/icons/OpenInNew";
+import React from "react";
 import { NFT } from "../../reducers/NFTsSlice";
 
 interface Props extends NFT {}

@@ -1,9 +1,8 @@
-import React, { useEffect } from "react";
 import { Container, Grid, makeStyles } from "@material-ui/core";
-import NftCard from "./NftCard";
-import { getAllTemplates } from "../../api";
-import { useAppSelector, useAppDispatch } from "../../hooks/storeHooks";
+import React, { useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "../../hooks/storeHooks";
 import { fetchNFTs } from "../../reducers/NFTsSlice";
+import NftCard from "./NftCard";
 
 interface Props {}
 
@@ -16,10 +15,10 @@ const useStyles = makeStyles((theme) => ({
 
 const Cards = (props: Props) => {
   const classes = useStyles();
-  const wax = useAppSelector((state) => state.wax.waxInstance);
-  const userName = useAppSelector((state) => state.user.userName);
+
   const NFTs = useAppSelector((state) => state.NFTs.data);
   const cardsStatus = useAppSelector((state) => state.NFTs.status);
+
   const dispatch = useAppDispatch();
 
   useEffect(() => {

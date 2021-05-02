@@ -1,4 +1,5 @@
-import { ExplorerApi, RpcApi } from "atomicassets";
+import { WaxJS } from "@waxio/waxjs/dist";
+import { ExplorerApi } from "atomicassets";
 import { NFT } from "../reducers/NFTsSlice";
 
 export const getAllTemplates = async () => {
@@ -28,4 +29,17 @@ export const getAllTemplates = async () => {
   }
 
   return res;
+};
+
+export const tryLoginWaxOnSetUp = async () => {
+  let wax: WaxJS = new WaxJS("https://wax.greymass.com");
+  if (await wax.isAutoLoginAvailable()) {
+    return await wax.login();
+  }
+  return undefined;
+};
+
+export const waxLogin = async () => {
+  let wax: WaxJS = new WaxJS("https://wax.greymass.com");
+  return await wax.login();
 };

@@ -1,16 +1,9 @@
-import {
-  AppBar,
-  Avatar,
-  Button,
-  IconButton,
-  makeStyles,
-} from "@material-ui/core";
+import { AppBar, Avatar, Button, makeStyles } from "@material-ui/core";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
-import CameraIcon from "@material-ui/icons/PhotoCamera";
 import React from "react";
-import { useAppSelector, useAppDispatch } from "../../hooks/storeHooks";
-import { logIn } from "../../reducers/userSlice";
+import { useAppDispatch, useAppSelector } from "../../hooks/storeHooks";
+import { fetchUser } from "../../reducers/userSlice";
 
 interface Props {}
 
@@ -30,12 +23,13 @@ const NavBar = (props: Props) => {
 
   const dispatch = useAppDispatch();
 
-  const wax = useAppSelector((state) => state.wax.waxInstance);
   const userName = useAppSelector((state) => state.user.userName);
+  const userStatus = useAppSelector((state) => state.user.status);
 
   const handleLoginClick = async () => {
-    const recievedUser = await wax.login();
-    dispatch(logIn(recievedUser));
+    if (userStatus !== "loading") {
+      dispatch(fetchUser(false));
+    }
   };
 
   return (
@@ -55,7 +49,7 @@ const NavBar = (props: Props) => {
           >
             Hila's Loot
           </Typography>
-          {!userName ? (
+          {!userName && userStatus === "succeeded" ? (
             <Button onClick={() => handleLoginClick()} color="inherit">
               Login
             </Button>

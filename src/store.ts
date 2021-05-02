@@ -1,11 +1,9 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
 import userReducer from "./reducers/userSlice";
-import waxReducer from "./reducers/waxSlice";
 import NFTsReducer from "./reducers/NFTsSlice";
 
 export const store = configureStore({
   reducer: {
-    wax: waxReducer,
     user: userReducer,
     NFTs: NFTsReducer,
   },

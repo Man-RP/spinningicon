@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { WaxJS } from "@waxio/waxjs/dist";
-import { error } from "node:console";
+import { tryLoginWaxOnSetUp, waxLogin } from "../api";
 
 export interface UserState {
   userName: string | undefined;
@@ -14,13 +13,11 @@ const initialState: UserState = {
   error: null,
 };
 
-export const fetchUser = createAsyncThunk<string, WaxJS>(
+export const fetchUser = createAsyncThunk<string | undefined, boolean>(
   "user/fetchUser",
-  async (wax) => {
-    let response = undefined;
-    const status = await wax.isAutoLoginAvailable();
-    if (status) response = wax.userAccount;
-    return response as string;
+  async (init: boolean) => {
+    if (init) return (await tryLoginWaxOnSetUp()) as string | undefined;
+    else return (await waxLogin()) as string | undefined;
   }
 );
 
