@@ -1,25 +1,37 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { tryLoginWaxOnSetUp, waxLogin } from "../api";
+import { getUserMints, tryLoginWaxOnSetUp, waxLogin } from "../api";
 
+export interface IMints {
+  [templateId: string]: string;
+}
 export interface UserState {
   userName: string | undefined;
+  mints: IMints;
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
 }
 
 const initialState: UserState = {
   userName: undefined,
+  mints: {},
   status: "idle",
   error: null,
 };
 
-export const fetchUser = createAsyncThunk<string | undefined, boolean>(
-  "user/fetchUser",
-  async (init: boolean) => {
-    if (init) return (await tryLoginWaxOnSetUp()) as string | undefined;
-    else return (await waxLogin()) as string | undefined;
-  }
-);
+export const fetchUser = createAsyncThunk<
+  { user: string | undefined; mints: IMints },
+  boolean
+>("user/fetchUser", async (init: boolean, thunkAPI) => {
+  let user: string | undefined = undefined;
+  let mints: IMints = {};
+  if (init) user = await tryLoginWaxOnSetUp();
+  else user = await waxLogin();
+  if (user) mints = await getUserMints();
+  return {
+    user: user,
+    mints: mints,
+  };
+});
 
 export const userSclice = createSlice({
   name: "user",
@@ -38,7 +50,8 @@ export const userSclice = createSlice({
     });
     builder.addCase(fetchUser.fulfilled, (state, action) => {
       state.status = "succeeded";
-      state.userName = action.payload;
+      state.userName = action.payload.user;
+      state.mints = action.payload.mints;
     });
     builder.addCase(fetchUser.rejected, (state, action) => {
       state.status = "failed";

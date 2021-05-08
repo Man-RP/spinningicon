@@ -70,13 +70,13 @@ const DetailsTooltip = (props: any) => {
 const NftCard = (props: Props) => {
   const classes = useStyles();
   const {
-    templateName = "SNX",
-    templateId = "000000000000",
-    schemeName = "spinningcoin",
-    description = "Synthetix Human or synthetic Human? Ill let you decide!",
-    img = "QmR8kTQvMRtqzGY2ZAuXz3Dk5n4nhYwD8BTwDMWSDGRU5p",
-    maxSupply = "500",
-    mint = "125",
+    templateName,
+    templateId,
+    schemeName,
+    description,
+    img,
+    maxSupply,
+    mint,
   } = props;
 
   const MintChip: ({ mint }: { mint: string | undefined }) => JSX.Element = ({
@@ -84,7 +84,7 @@ const NftCard = (props: Props) => {
   }) => {
     return (
       <>
-        {mint ? (
+        {mint !== "-1" ? (
           <Chip
             label={`Mint: ${mint}`}
             color="primary"
@@ -103,6 +103,7 @@ const NftCard = (props: Props) => {
     );
   };
 
+  console.log(mint);
   return (
     <Card className={classes.card}>
       <CardMedia
@@ -146,7 +147,7 @@ const NftCard = (props: Props) => {
             <OpenInNewIcon />
           </IconButton>
         </div>
-        <MintChip mint={mint} />
+        {mint && <MintChip mint={mint} />}
       </CardActions>
     </Card>
   );

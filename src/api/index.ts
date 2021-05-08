@@ -1,6 +1,7 @@
 import { WaxJS } from "@waxio/waxjs/dist";
 import { ExplorerApi } from "atomicassets";
 import { NFT } from "../reducers/NFTsSlice";
+import { IMints } from "../reducers/userSlice";
 
 export const getAllTemplates = async () => {
   const api = new ExplorerApi(
@@ -9,7 +10,7 @@ export const getAllTemplates = async () => {
     {}
   );
   const rawTemplateObject = await api.getTemplates({
-    authorized_account: "2fhr.wam",
+    schema_name: "spinningcoin",
   });
 
   let res: NFT[] = [];
@@ -24,7 +25,6 @@ export const getAllTemplates = async () => {
         ? template.immutable_data.description
         : "",
       img: template.immutable_data.img,
-      mint: undefined,
     });
   }
 
@@ -34,12 +34,34 @@ export const getAllTemplates = async () => {
 export const tryLoginWaxOnSetUp = async () => {
   let wax: WaxJS = new WaxJS("https://wax.greymass.com");
   if (await wax.isAutoLoginAvailable()) {
-    return await wax.login();
+    return (await wax.login()) as string;
   }
   return undefined;
 };
 
 export const waxLogin = async () => {
   let wax: WaxJS = new WaxJS("https://wax.greymass.com");
-  return await wax.login();
+  return (await wax.login()) as string;
+};
+
+export const getUserMints = async () => {
+  const res: IMints = {};
+  const api = new ExplorerApi(
+    "https://wax.api.atomicassets.io",
+    "atomicassets",
+    {}
+  );
+
+  const rawAssetsObject = await api.getAssets({
+    schema_name: "spinningcoin",
+  });
+
+  for (let asset of rawAssetsObject) {
+    const templateId = asset.template?.template_id;
+    const mintNumber = asset.template?.issued_supply;
+    if (typeof templateId === "string" && typeof mintNumber === "number")
+      res[templateId] = mintNumber;
+  }
+
+  return res;
 };

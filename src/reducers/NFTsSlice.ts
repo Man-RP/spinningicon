@@ -1,5 +1,9 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+
 import { getAllTemplates } from "../api";
+import { addUserMintsToNFTs } from "../helper";
+import { RootState } from "../store";
+import { IMints } from "./userSlice";
 
 export interface NFT {
   templateId: string;
@@ -8,7 +12,7 @@ export interface NFT {
   description: string;
   img: string;
   maxSupply: string | undefined;
-  mint: string | undefined;
+  mint?: string | undefined;
 }
 
 export interface NFTsState {
@@ -19,17 +23,22 @@ export interface NFTsState {
 
 const initialState: NFTsState = { data: [], status: "idle", error: null };
 
-export const fetchNFTs = createAsyncThunk<NFT[]>("NFTs/fetchNFTs", async () => {
-  const response = await getAllTemplates();
-  return response as NFT[];
-});
+export const fetchNFTs = createAsyncThunk<NFT[], void, { state: RootState }>(
+  "NFTs/fetchNFTs",
+  async (dummy, thunkAPI) => {
+    let NFTs: NFT[] = await getAllTemplates();
+    const { user } = await thunkAPI.getState();
+    if (user.userName) NFTs = addUserMintsToNFTs(NFTs, user.mints);
+    return NFTs as NFT[];
+  }
+);
 
 export const NFTsSlice = createSlice({
   name: "NFTs",
   initialState,
   reducers: {
-    loadData: (state, action: PayloadAction<NFT[]>) => {
-      state.data = action.payload;
+    addUserMints: (state, action: PayloadAction<IMints>) => {
+      state.data = addUserMintsToNFTs(state.data, action.payload);
     },
   },
   extraReducers: (builder) => {
@@ -47,6 +56,6 @@ export const NFTsSlice = createSlice({
   },
 });
 
-export const { loadData } = NFTsSlice.actions;
+export const { addUserMints } = NFTsSlice.actions;
 
 export default NFTsSlice.reducer;
