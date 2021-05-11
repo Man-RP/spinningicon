@@ -33,6 +33,7 @@ export const getAllTemplates = async () => {
 
 export const tryLoginWaxOnSetUp = async () => {
   let wax: WaxJS = new WaxJS("https://wax.greymass.com");
+  console.log(await wax.isAutoLoginAvailable());
   if (await wax.isAutoLoginAvailable()) {
     return (await wax.login()) as string;
   }

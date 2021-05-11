@@ -24,7 +24,7 @@ const NavBar = (props: Props) => {
   const dispatch = useAppDispatch();
 
   const userName = useAppSelector((state) => state.user.userName);
-  const userStatus = useAppSelector((state) => state.user.status);
+  const userStatus = useAppSelector((state) => state.user.userFetchStatus);
 
   const handleLoginClick = async () => {
     if (userStatus !== "loading") {

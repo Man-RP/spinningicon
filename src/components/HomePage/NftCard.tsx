@@ -103,7 +103,6 @@ const NftCard = (props: Props) => {
     );
   };
 
-  console.log(mint);
   return (
     <Card className={classes.card}>
       <CardMedia

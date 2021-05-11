@@ -1,4 +1,4 @@
-import { addUserMintsToNFTs } from "../helper";
+import { addUserMintsToNFTs, getTemplateMint } from "../helper";
 import { NFT } from "../reducers/NFTsSlice";
 import { IMints } from "../reducers/userSlice";
 
@@ -61,4 +61,14 @@ it("add mints to each NFT data", () => {
     maxSupply: "4540",
     mint: "-1",
   });
+});
+
+it("returns mint number of user asset by template id", () => {
+  expect(getTemplateMint("1111", { 1111: "214", 1221: "2342" })).toMatch(/214/);
+  expect(getTemplateMint("1221", { 1111: "214", 1221: "2342" })).toMatch(
+    /2342/
+  );
+  expect(getTemplateMint("1112", { 1111: "214", 1221: "2342" })).toMatch(/-1/);
+  expect(getTemplateMint("1112", {})).toMatch(/-1/);
+  expect(getTemplateMint("", { 1111: "214", 1221: "2342" })).toMatch(/-1/);
 });

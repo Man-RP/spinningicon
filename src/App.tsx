@@ -7,7 +7,7 @@ import { fetchUser } from "./reducers/userSlice";
 function App() {
   const dispatch = useAppDispatch();
 
-  const userStatus = useAppSelector((state) => state.user.status);
+  const userStatus = useAppSelector((state) => state.user.userFetchStatus);
 
   useEffect(() => {
     if (userStatus === "idle") {
