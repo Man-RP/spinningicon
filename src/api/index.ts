@@ -31,9 +31,38 @@ export const getAllTemplates = async () => {
   return res;
 };
 
+export const getTemplatesByPage = async (page: number) => {
+  const api = new ExplorerApi(
+    "https://wax.api.atomicassets.io",
+    "atomicassets",
+    {}
+  );
+  const rawTemplateObject = await api.getTemplates({
+    schema_name: "spinningcoin",
+    limit: 6,
+    page: page + 1,
+  });
+
+  let res: NFT[] = [];
+
+  for (let template of rawTemplateObject) {
+    res.push({
+      templateId: template.template_id.toString(),
+      templateName: template.immutable_data.name,
+      schemeName: template.schema.schema_name,
+      maxSupply: template.max_supply.toString(),
+      description: template.immutable_data.hasOwnProperty("description")
+        ? template.immutable_data.description
+        : "",
+      img: template.immutable_data.img,
+    });
+  }
+
+  return res;
+};
+
 export const tryLoginWaxOnSetUp = async () => {
   let wax: WaxJS = new WaxJS("https://wax.greymass.com");
-  console.log(await wax.isAutoLoginAvailable());
   if (await wax.isAutoLoginAvailable()) {
     return (await wax.login()) as string;
   }

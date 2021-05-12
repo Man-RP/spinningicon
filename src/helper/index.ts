@@ -18,13 +18,11 @@ export const addUserMintsToNFTs: (NFTs: NFT[], mints: IMints) => NFT[] = (
   return res;
 };
 
-export const getTemplateMint: (
-  templateId: string,
-  mintsObj: IMints
-) => string = (templateId, mintsObj) => {
-  const userTemplateIds = Object.keys(mintsObj);
-  for (let userTemplate of userTemplateIds) {
-    if (userTemplate === templateId) return mintsObj[userTemplate];
-  }
-  return "-1";
-};
+export const getTemplateMint: (templateId: string, mintsObj: IMints) => string =
+  (templateId, mintsObj) => {
+    const userTemplateIds = Object.keys(mintsObj);
+    for (let userTemplate of userTemplateIds) {
+      if (userTemplate === templateId) return mintsObj[userTemplate];
+    }
+    return "-1";
+  };

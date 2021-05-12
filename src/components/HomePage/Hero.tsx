@@ -7,8 +7,6 @@ import {
   Typography,
 } from "@material-ui/core";
 
-interface Props {}
-
 const useStyles = makeStyles((theme) => ({
   icon: {
     marginRight: theme.spacing(2),
@@ -30,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Hero = (props: Props) => {
+const Hero = () => {
   const classes = useStyles();
   return (
     <div className={classes.heroContent}>

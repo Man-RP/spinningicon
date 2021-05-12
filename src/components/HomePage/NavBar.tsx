@@ -1,11 +1,9 @@
+import React from "react";
 import { AppBar, Avatar, Button, makeStyles } from "@material-ui/core";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
-import React from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks/storeHooks";
 import { fetchUser } from "../../reducers/userSlice";
-
-interface Props {}
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -18,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const NavBar = (props: Props) => {
+const NavBar = () => {
   const classes = useStyles();
 
   const dispatch = useAppDispatch();

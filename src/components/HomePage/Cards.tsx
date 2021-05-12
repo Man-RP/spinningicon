@@ -2,11 +2,8 @@ import { Container, Grid, makeStyles } from "@material-ui/core";
 import React, { useEffect } from "react";
 import { getTemplateMint } from "../../helper";
 import { useAppDispatch, useAppSelector } from "../../hooks/storeHooks";
-import { fetchNFTs } from "../../reducers/NFTsSlice";
-import { IMints } from "../../reducers/userSlice";
+import { fetchAllNFTs } from "../../reducers/NFTsSlice";
 import NftCard from "./NftCard";
-
-interface Props {}
 
 const useStyles = makeStyles((theme) => ({
   cardGrid: {
@@ -15,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Cards = (props: Props) => {
+const Cards = () => {
   const classes = useStyles();
 
   const NFTs = useAppSelector((state) => state.NFTs.data);
@@ -26,7 +23,7 @@ const Cards = (props: Props) => {
 
   useEffect(() => {
     if (cardsStatus === "idle") {
-      dispatch(fetchNFTs());
+      dispatch(fetchAllNFTs());
     }
   }, [cardsStatus, dispatch]);
 
@@ -35,7 +32,10 @@ const Cards = (props: Props) => {
       <Grid container spacing={4}>
         {NFTs.map((NFT, index) => (
           <Grid item key={index} xs={12} sm={6} md={4}>
-            <NftCard {...NFT} mint={getTemplateMint(NFT.templateId, mints)} />
+            <NftCard
+              {...NFT}
+              mint={mints && getTemplateMint(NFT.templateId, mints)}
+            />
           </Grid>
         ))}
       </Grid>

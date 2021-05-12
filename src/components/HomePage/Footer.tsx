@@ -1,8 +1,6 @@
 import React from "react";
 import { Link, makeStyles, Typography } from "@material-ui/core";
 
-interface Props {}
-
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -23,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Footer = (props: Props) => {
+const Footer = () => {
   const classes = useStyles();
   return (
     <footer className={classes.footer}>

@@ -16,8 +16,6 @@ import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import React from "react";
 import { NFT } from "../../reducers/NFTsSlice";
 
-interface Props extends NFT {}
-
 const useStyles = makeStyles((theme) => ({
   card: {
     height: "100%",
@@ -40,14 +38,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const DetailsTooltip = (props: any) => {
-  const {
-    templateName,
-    templateId,
-    schemeName,
-    description,
-    maxSupply,
-  } = props;
+const DetailsTooltip = (props: Omit<NFT, "img">) => {
+  const { templateName, templateId, schemeName, description, maxSupply } =
+    props;
   return (
     <>
       <Typography variant="h4" component="h2" style={{ marginBottom: 15 }}>
@@ -67,7 +60,7 @@ const DetailsTooltip = (props: any) => {
   );
 };
 
-const NftCard = (props: Props) => {
+const NftCard = (props: NFT) => {
   const classes = useStyles();
   const {
     templateName,

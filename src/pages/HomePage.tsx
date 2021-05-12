@@ -13,7 +13,7 @@ const HomePage = (props: Props) => {
       <CssBaseline />
       <NavBar />
       <main>
-        <Hero />
+        {/* <Hero /> */}
         <Cards />
       </main>
       <Footer />

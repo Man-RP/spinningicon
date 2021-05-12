@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { getUserMints, tryLoginWaxOnSetUp, waxLogin } from "../api";
 import { RootState } from "../store";
 
@@ -46,14 +46,7 @@ export const fetchUserMints = createAsyncThunk<
 export const userSclice = createSlice({
   name: "user",
   initialState,
-  reducers: {
-    logout: (state) => {
-      state.userName = undefined;
-    },
-    logIn: (state, action: PayloadAction<string | unknown>) => {
-      if (typeof action.payload === "string") state.userName = action.payload;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder.addCase(fetchUser.pending, (state, action) => {
       state.userFetchStatus = "loading";
@@ -66,20 +59,18 @@ export const userSclice = createSlice({
       state.userFetchStatus = "failed";
       state.error = action.error.message ? action.error.message : null;
     });
-    builder.addCase(fetchUser.pending, (state, action) => {
+    builder.addCase(fetchUserMints.pending, (state, action) => {
       state.mintsFetchStatus = "loading";
     });
-    builder.addCase(fetchUser.fulfilled, (state, action) => {
+    builder.addCase(fetchUserMints.fulfilled, (state, action) => {
       state.mintsFetchStatus = "succeeded";
-      state.userName = action.payload;
+      state.mints = action.payload;
     });
-    builder.addCase(fetchUser.rejected, (state, action) => {
+    builder.addCase(fetchUserMints.rejected, (state, action) => {
       state.mintsFetchStatus = "failed";
       state.error = action.error.message ? action.error.message : null;
     });
   },
 });
-
-export const { logout, logIn } = userSclice.actions;
 
 export default userSclice.reducer;
