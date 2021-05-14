@@ -17,6 +17,7 @@ export interface NFT {
 export interface NFTsState {
   data: NFT[];
   page: number;
+  hasMore: boolean;
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
 }
@@ -24,6 +25,7 @@ export interface NFTsState {
 const initialState: NFTsState = {
   data: [],
   page: 0,
+  hasMore: true,
   status: "idle",
   error: null,
 };
@@ -70,8 +72,10 @@ export const NFTsSlice = createSlice({
     });
     builder.addCase(fetchNFTs.fulfilled, (state, action) => {
       state.status = "succeeded";
-      state.data.concat(action.payload);
-      state.page++;
+      if (action.payload.length > 0) {
+        state.data = state.data.concat(action.payload);
+        state.page++;
+      } else state.hasMore = false;
     });
     builder.addCase(fetchNFTs.rejected, (state, action) => {
       state.status = "failed";

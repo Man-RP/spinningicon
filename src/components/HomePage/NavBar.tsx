@@ -4,6 +4,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { useAppDispatch, useAppSelector } from "../../hooks/storeHooks";
 import { fetchUser } from "../../reducers/userSlice";
+import logo from "../../assets/logo.jpg";
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -34,18 +35,14 @@ const NavBar = () => {
     <>
       <AppBar position="relative">
         <Toolbar>
-          <Avatar
-            className={classes.icon}
-            alt="Logo"
-            src="https://pbs.twimg.com/profile_images/1383774104004689928/YqWOgvNJ_400x400.jpg"
-          />
+          <Avatar className={classes.icon} alt="Logo" src={logo} />
           <Typography
             variant="h6"
             color="inherit"
             noWrap
             className={classes.title}
           >
-            Hila's Loot
+            SpinningIcons
           </Typography>
           {!userName && userStatus === "succeeded" ? (
             <Button onClick={() => handleLoginClick()} color="inherit">
