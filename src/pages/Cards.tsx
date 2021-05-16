@@ -9,7 +9,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import NftCard from "../components/HomePage/NftCard";
 import { getTemplateMint } from "../helper";
 import { useAppDispatch, useAppSelector } from "../hooks/storeHooks";
-import { fetchNFTs } from "../reducers/NFTsSlice";
+import { fetchNFTs, schemasSelector } from "../reducers/NFTsSlice";
 
 const useStyles = makeStyles((theme) => ({
   cardGrid: {
@@ -49,7 +49,6 @@ const Cards = () => {
       loader={
         <div
           style={{
-            // backgroundColor: "red",
             display: "flex",
             justifyContent: "center",
             paddingTop: 50,
@@ -63,7 +62,6 @@ const Cards = () => {
     </InfiniteScroll>
   );
 
-  console.log("render");
   return (
     <Container className={classes.cardGrid} maxWidth="md">
       <ScrollFetchWrapper>

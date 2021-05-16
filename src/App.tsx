@@ -15,11 +15,14 @@ function App() {
   const mintsStatus = useAppSelector((state) => state.user.mintsFetchStatus);
 
   useEffect(() => {
-    if (userStatus === "idle") dispatch(fetchUser(true));
+    if (userStatus === "init") dispatch(fetchUser(true));
     else if (userStatus === "succeeded" && mintsStatus === "idle")
       dispatch(fetchUserMints());
   }, [userStatus, mintsStatus, dispatch]);
 
+  console.log(
+    "userStatus: " + userStatus + "\n" + "mintsStatus: " + mintsStatus
+  );
   return (
     <Router>
       <CssBaseline />

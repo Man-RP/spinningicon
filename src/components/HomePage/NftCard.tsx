@@ -39,8 +39,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const DetailsTooltip = (props: Omit<NFT, "img">) => {
-  const { templateName, templateId, schemeName, description, maxSupply } =
-    props;
+  const {
+    templateName,
+    collection,
+    templateId,
+    schemeName,
+    description,
+    maxSupply,
+  } = props;
   return (
     <>
       <Typography variant="h4" component="h2" style={{ marginBottom: 15 }}>
@@ -48,6 +54,8 @@ const DetailsTooltip = (props: Omit<NFT, "img">) => {
       </Typography>
       <Typography variant="body2" component="p">
         ID: {templateId}
+        <br />
+        Collection: {collection}
         <br />
         Scheme: {schemeName}
         <br />
@@ -66,6 +74,7 @@ const NftCard = (props: NFT) => {
     templateName,
     templateId,
     schemeName,
+    collection,
     description,
     img,
     maxSupply,
@@ -86,7 +95,7 @@ const NftCard = (props: NFT) => {
           />
         ) : (
           <Chip
-            label={`Not in wallet`}
+            label={`Not owned`}
             color="secondary"
             icon={<CloseIcon />}
             classes={{ root: classes.chip }}
@@ -127,6 +136,7 @@ const NftCard = (props: NFT) => {
                 description={description}
                 templateId={templateId}
                 maxSupply={maxSupply}
+                collection={collection}
               />
             }
             placement="left-end"

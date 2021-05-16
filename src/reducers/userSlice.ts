@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { getUserMints, tryLoginWaxOnSetUp, waxLogin } from "../api";
 import { RootState } from "../store";
 
@@ -8,7 +8,7 @@ export interface IMints {
 export interface UserState {
   userName: string | undefined;
   mints: IMints | undefined;
-  userFetchStatus: "idle" | "loading" | "succeeded" | "failed";
+  userFetchStatus: "init" | "idle" | "loading" | "succeeded" | "failed";
   mintsFetchStatus: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
 }
@@ -16,7 +16,7 @@ export interface UserState {
 const initialState: UserState = {
   userName: undefined,
   mints: undefined,
-  userFetchStatus: "idle",
+  userFetchStatus: "init",
   mintsFetchStatus: "idle",
   error: null,
 };
@@ -46,7 +46,14 @@ export const fetchUserMints = createAsyncThunk<
 export const userSclice = createSlice({
   name: "user",
   initialState,
-  reducers: {},
+  reducers: {
+    logout: (state, action: PayloadAction<void>) => {
+      state.userName = undefined;
+      state.mints = undefined;
+      state.userFetchStatus = "idle";
+      state.mintsFetchStatus = "idle";
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchUser.pending, (state, action) => {
       state.userFetchStatus = "loading";
@@ -72,5 +79,7 @@ export const userSclice = createSlice({
     });
   },
 });
+
+export const { logout } = userSclice.actions;
 
 export default userSclice.reducer;

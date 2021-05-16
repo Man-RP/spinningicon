@@ -1,4 +1,9 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import {
+  createAsyncThunk,
+  createSelector,
+  createSlice,
+  PayloadAction,
+} from "@reduxjs/toolkit";
 import { getAllTemplates, getTemplatesByPage } from "../api";
 import { addUserMintsToNFTs } from "../helper";
 import { RootState } from "../store";
@@ -12,6 +17,7 @@ export interface NFT {
   img: string;
   maxSupply: string | undefined;
   mint?: string | undefined;
+  collection?: string | undefined;
 }
 
 export interface NFTsState {
@@ -54,6 +60,9 @@ export const NFTsSlice = createSlice({
     addUserMints: (state, action: PayloadAction<IMints>) => {
       state.data = addUserMintsToNFTs(state.data, action.payload);
     },
+    getSchemas: (state, action: PayloadAction<IMints>) => {
+      state.data = addUserMintsToNFTs(state.data, action.payload);
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchAllNFTs.pending, (state, action) => {
@@ -83,6 +92,17 @@ export const NFTsSlice = createSlice({
     });
   },
 });
+
+export const schemasSelector = createSelector<RootState, NFT[], string[]>(
+  (state) => state.NFTs.data,
+  (NFTs: NFT[]) => {
+    const res: string[] = [];
+    NFTs.map((template) => {
+      if (!res.includes(template.schemeName)) res.push(template.schemeName);
+    });
+    return res;
+  }
+);
 
 export const { addUserMints } = NFTsSlice.actions;
 

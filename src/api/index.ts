@@ -10,7 +10,7 @@ export const getAllTemplates = async () => {
     {}
   );
   const rawTemplateObject = await api.getTemplates({
-    schema_name: "spinningcoin",
+    collection_name: "spinningcoin",
   });
 
   let res: NFT[] = [];
@@ -20,6 +20,7 @@ export const getAllTemplates = async () => {
       templateId: template.template_id.toString(),
       templateName: template.immutable_data.name,
       schemeName: template.schema.schema_name,
+      collection: template.collection.name,
       maxSupply: template.max_supply.toString(),
       description: template.immutable_data.hasOwnProperty("description")
         ? template.immutable_data.description
@@ -27,7 +28,6 @@ export const getAllTemplates = async () => {
       img: template.immutable_data.img,
     });
   }
-
   return res;
 };
 
@@ -38,8 +38,8 @@ export const getTemplatesByPage = async (page: number) => {
     {}
   );
   const rawTemplateObject = await api.getTemplates({
-    schema_name: "spinningcoin",
-    limit: 6,
+    collection_name: "spinningicon",
+    limit: 9,
     page: page + 1,
   });
 
@@ -49,15 +49,15 @@ export const getTemplatesByPage = async (page: number) => {
     res.push({
       templateId: template.template_id.toString(),
       templateName: template.immutable_data.name,
+      collection: template.collection.name,
       schemeName: template.schema.schema_name,
       maxSupply: template.max_supply.toString(),
-      description: template.immutable_data.hasOwnProperty("description")
-        ? template.immutable_data.description
+      description: template.immutable_data.hasOwnProperty("Description")
+        ? template.immutable_data.Description
         : "",
       img: template.immutable_data.img,
     });
   }
-
   return res;
 };
 
