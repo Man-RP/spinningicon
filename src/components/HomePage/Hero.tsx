@@ -1,11 +1,5 @@
+import { Container, makeStyles, Typography } from "@material-ui/core";
 import React from "react";
-import {
-  Button,
-  Container,
-  Grid,
-  makeStyles,
-  Typography,
-} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -30,6 +24,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Hero = () => {
   const classes = useStyles();
+
   return (
     <div className={classes.heroContent}>
       <Container maxWidth="sm">
@@ -40,25 +35,20 @@ const Hero = () => {
           color="textPrimary"
           gutterBottom
         >
-          Hila's Loot
+          SpinningIcons
         </Typography>
         <Typography variant="h5" align="center" color="textSecondary" paragraph>
           Welcome to my beautiful site
         </Typography>
-        <div className={classes.heroButtons}>
+        {/* <div className={classes.heroButtons}>
           <Grid container spacing={2} justify="center">
-            <Grid item>
-              <Button variant="contained" color="primary">
-                Main call to action
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button variant="outlined" color="primary">
-                Secondary action
-              </Button>
-            </Grid>
+            {schemas.map((schema, index) => (
+              <Grid item>
+                <Chip label={schema} clickable color="primary" />
+              </Grid>
+            ))}
           </Grid>
-        </div>
+        </div> */}
       </Container>
     </div>
   );

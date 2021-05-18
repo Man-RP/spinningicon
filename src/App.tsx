@@ -20,9 +20,6 @@ function App() {
       dispatch(fetchUserMints());
   }, [userStatus, mintsStatus, dispatch]);
 
-  console.log(
-    "userStatus: " + userStatus + "\n" + "mintsStatus: " + mintsStatus
-  );
   return (
     <Router>
       <CssBaseline />

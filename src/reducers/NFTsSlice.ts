@@ -1,3 +1,4 @@
+import { Collections } from "@material-ui/icons";
 import {
   createAsyncThunk,
   createSelector,
@@ -5,7 +6,11 @@ import {
   PayloadAction,
 } from "@reduxjs/toolkit";
 import { getAllTemplates, getTemplatesByPage } from "../api";
-import { addUserMintsToNFTs } from "../helper";
+import {
+  addUserMintsToNFTs,
+  filterNFTsByCollection,
+  filterNFTsByTemplateName,
+} from "../helper";
 import { RootState } from "../store";
 import { IMints } from "./userSlice";
 
@@ -13,11 +18,11 @@ export interface NFT {
   templateId: string;
   templateName: string;
   schemeName: string;
+  collectionName: string;
   description: string;
   img: string;
   maxSupply: string | undefined;
   mint?: string | undefined;
-  collection?: string | undefined;
 }
 
 export interface NFTsState {
@@ -26,6 +31,7 @@ export interface NFTsState {
   hasMore: boolean;
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
+  search: string;
 }
 
 const initialState: NFTsState = {
@@ -34,6 +40,7 @@ const initialState: NFTsState = {
   hasMore: true,
   status: "idle",
   error: null,
+  search: "",
 };
 
 export const fetchAllNFTs = createAsyncThunk<NFT[], void>(
@@ -62,6 +69,9 @@ export const NFTsSlice = createSlice({
     },
     getSchemas: (state, action: PayloadAction<IMints>) => {
       state.data = addUserMintsToNFTs(state.data, action.payload);
+    },
+    filterByName: (state, action: PayloadAction<string>) => {
+      state.search = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -93,17 +103,15 @@ export const NFTsSlice = createSlice({
   },
 });
 
-export const schemasSelector = createSelector<RootState, NFT[], string[]>(
-  (state) => state.NFTs.data,
-  (NFTs: NFT[]) => {
-    const res: string[] = [];
-    NFTs.map((template) => {
-      if (!res.includes(template.schemeName)) res.push(template.schemeName);
-    });
+export const NFTsSelector = createSelector<RootState, NFT[], string, NFT[]>(
+  [(state) => state.NFTs.data, (state) => state.NFTs.search],
+  (NFTs: NFT[], search) => {
+    let res: NFT[] = [];
+    res = filterNFTsByTemplateName(NFTs, search);
     return res;
   }
 );
 
-export const { addUserMints } = NFTsSlice.actions;
+export const { addUserMints, getSchemas, filterByName } = NFTsSlice.actions;
 
 export default NFTsSlice.reducer;

@@ -20,7 +20,7 @@ export const getAllTemplates = async () => {
       templateId: template.template_id.toString(),
       templateName: template.immutable_data.name,
       schemeName: template.schema.schema_name,
-      collection: template.collection.name,
+      collectionName: template.collection.name,
       maxSupply: template.max_supply.toString(),
       description: template.immutable_data.hasOwnProperty("description")
         ? template.immutable_data.description
@@ -49,7 +49,7 @@ export const getTemplatesByPage = async (page: number) => {
     res.push({
       templateId: template.template_id.toString(),
       templateName: template.immutable_data.name,
-      collection: template.collection.name,
+      collectionName: template.collection.name,
       schemeName: template.schema.schema_name,
       maxSupply: template.max_supply.toString(),
       description: template.immutable_data.hasOwnProperty("Description")
@@ -95,3 +95,20 @@ export const getUserMints = async () => {
 
   return res;
 };
+
+// export const getAllSchemas = async () => {
+//   const res: string[] = [];
+//   const api = new ExplorerApi(
+//     "https://wax.api.atomicassets.io",
+//     "atomicassets",
+//     {}
+//   );
+
+//   const rawTemplateObject = await api.getSchemas({
+//     collection_name: "spinningcoin",
+//   });
+
+//   rawTemplateObject.forEach((item) => res.push(item.schema_name));
+
+//   return res;
+// };

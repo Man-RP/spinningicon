@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
 const DetailsTooltip = (props: Omit<NFT, "img">) => {
   const {
     templateName,
-    collection,
+    collectionName: collection,
     templateId,
     schemeName,
     description,
@@ -74,7 +74,7 @@ const NftCard = (props: NFT) => {
     templateName,
     templateId,
     schemeName,
-    collection,
+    collectionName: collection,
     description,
     img,
     maxSupply,
@@ -136,7 +136,7 @@ const NftCard = (props: NFT) => {
                 description={description}
                 templateId={templateId}
                 maxSupply={maxSupply}
-                collection={collection}
+                collectionName={collection}
               />
             }
             placement="left-end"
