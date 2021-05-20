@@ -10,7 +10,7 @@ export const getAllTemplates = async () => {
     {}
   );
   const rawTemplateObject = await api.getTemplates({
-    collection_name: "spinningcoin",
+    collection_name: "spinningicon",
   });
 
   let res: NFT[] = [];
@@ -19,11 +19,11 @@ export const getAllTemplates = async () => {
     res.push({
       templateId: template.template_id.toString(),
       templateName: template.immutable_data.name,
-      schemeName: template.schema.schema_name,
       collectionName: template.collection.name,
+      schemeName: template.schema.schema_name,
       maxSupply: template.max_supply.toString(),
-      description: template.immutable_data.hasOwnProperty("description")
-        ? template.immutable_data.description
+      description: template.immutable_data.hasOwnProperty("Description")
+        ? template.immutable_data.Description
         : "",
       img: template.immutable_data.img,
     });

@@ -1,4 +1,3 @@
-import { Collections } from "@material-ui/icons";
 import {
   createAsyncThunk,
   createSelector,
@@ -6,10 +5,12 @@ import {
   PayloadAction,
 } from "@reduxjs/toolkit";
 import { getAllTemplates, getTemplatesByPage } from "../api";
+import { templatesInterval } from "../consts/consts";
 import {
   addUserMintsToNFTs,
-  filterNFTsByCollection,
-  filterNFTsByTemplateName,
+  checkIfLastPage,
+  filterNFTsByPage,
+  filterTemplatesByName,
 } from "../helper";
 import { RootState } from "../store";
 import { IMints } from "./userSlice";
@@ -32,15 +33,17 @@ export interface NFTsState {
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
   search: string;
+  schemas: string[];
 }
 
 const initialState: NFTsState = {
   data: [],
-  page: 0,
+  page: 1,
   hasMore: true,
   status: "idle",
   error: null,
   search: "",
+  schemas: [],
 };
 
 export const fetchAllNFTs = createAsyncThunk<NFT[], void>(
@@ -72,6 +75,21 @@ export const NFTsSlice = createSlice({
     },
     filterByName: (state, action: PayloadAction<string>) => {
       state.search = action.payload;
+      state.hasMore = true;
+      state.page = 1;
+    },
+    icreasePage: (state) => {
+      state.page = state.page + 1;
+      if (
+        checkIfLastPage(
+          state.data,
+          templatesInterval,
+          state.page,
+          state.search,
+          state.schemas
+        )
+      )
+        state.hasMore = false;
     },
   },
   extraReducers: (builder) => {
@@ -103,15 +121,31 @@ export const NFTsSlice = createSlice({
   },
 });
 
-export const NFTsSelector = createSelector<RootState, NFT[], string, NFT[]>(
-  [(state) => state.NFTs.data, (state) => state.NFTs.search],
-  (NFTs: NFT[], search) => {
-    let res: NFT[] = [];
-    res = filterNFTsByTemplateName(NFTs, search);
+export const NFTsSelector = createSelector<
+  RootState,
+  NFT[],
+  string,
+  number,
+  NFT[]
+>(
+  [
+    (state) => state.NFTs.data,
+    (state) => state.NFTs.search,
+    (state) => state.NFTs.page,
+  ],
+  (NFTs, search, page) => {
+    let res: NFT[] = NFTs;
+    if (search.length > 0) res = filterTemplatesByName(NFTs, search); //filter by search
+    res = filterNFTsByPage(res, templatesInterval, page); //limit results amount
     return res;
   }
 );
 
-export const { addUserMints, getSchemas, filterByName } = NFTsSlice.actions;
+export const {
+  addUserMints,
+  getSchemas,
+  filterByName,
+  icreasePage,
+} = NFTsSlice.actions;
 
 export default NFTsSlice.reducer;

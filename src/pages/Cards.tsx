@@ -4,14 +4,14 @@ import {
   Grid,
   makeStyles,
 } from "@material-ui/core";
-import React, { ReactChild, useEffect } from "react";
+import React, { ReactChild, useCallback, useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Hero from "../components/HomePage/Hero";
 import NftCard from "../components/HomePage/NftCard";
 import Search from "../components/HomePage/Search";
 import { getTemplateMint } from "../helper";
 import { useAppDispatch, useAppSelector } from "../hooks/storeHooks";
-import { fetchNFTs, NFTsSelector } from "../reducers/NFTsSlice";
+import { fetchAllNFTs, icreasePage, NFTsSelector } from "../reducers/NFTsSlice";
 
 const useStyles = makeStyles((theme) => ({
   cardGrid: {
@@ -34,13 +34,23 @@ const Cards = () => {
 
   const dispatch = useAppDispatch();
 
-  const fetchData = () => dispatch(fetchNFTs());
+  const fetchData: () => void = useCallback(() => dispatch(fetchAllNFTs()), [
+    dispatch,
+  ]);
+
+  const handleNextScroll: () => void = () => dispatch(icreasePage());
 
   useEffect(() => {
     if (cardsStatus === "idle") {
       fetchData();
     }
-  }, [cardsStatus, dispatch]);
+  }, [cardsStatus, dispatch, fetchData]);
+
+  useEffect(() => {
+    if (NFTs.length<1) {
+      fetchData();
+    }
+  }, [NFTs]);
 
   const ScrollFetchWrapper: ({
     children,
@@ -50,7 +60,7 @@ const Cards = () => {
     <InfiniteScroll
       style={{ padding: 50 }}
       dataLength={NFTs.length}
-      next={fetchData}
+      next={handleNextScroll}
       hasMore={hasMore}
       loader={
         <div
