@@ -62,7 +62,12 @@ export const getTemplatesByPage = async (page: number) => {
 };
 
 export const tryLoginWaxOnSetUp = async () => {
-  let wax: WaxJS = new WaxJS("https://wax.greymass.com");
+  let wax: WaxJS = new WaxJS(
+    "https://wax.greymass.com",
+    undefined,
+    undefined,
+    false
+  );
   if (await wax.isAutoLoginAvailable()) {
     return (await wax.login()) as string;
   }
@@ -70,7 +75,12 @@ export const tryLoginWaxOnSetUp = async () => {
 };
 
 export const waxLogin = async () => {
-  let wax: WaxJS = new WaxJS("https://wax.greymass.com");
+  let wax: WaxJS = new WaxJS(
+    "https://wax.greymass.com",
+    undefined,
+    undefined,
+    false
+  );
   return (await wax.login()) as string;
 };
 
@@ -96,19 +106,19 @@ export const getUserMints = async () => {
   return res;
 };
 
-// export const getAllSchemas = async () => {
-//   const res: string[] = [];
-//   const api = new ExplorerApi(
-//     "https://wax.api.atomicassets.io",
-//     "atomicassets",
-//     {}
-//   );
+export const getAllSchemas = async () => {
+  const res: string[] = [];
+  const api = new ExplorerApi(
+    "https://wax.api.atomicassets.io",
+    "atomicassets",
+    {}
+  );
 
-//   const rawTemplateObject = await api.getSchemas({
-//     collection_name: "spinningcoin",
-//   });
+  const rawTemplateObject = await api.getSchemas({
+    collection_name: "spinningicon",
+  });
 
-//   rawTemplateObject.forEach((item) => res.push(item.schema_name));
+  rawTemplateObject.forEach((item) => res.push(item.schema_name));
 
-//   return res;
-// };
+  return res;
+};

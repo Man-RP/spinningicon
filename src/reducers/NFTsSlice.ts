@@ -10,7 +10,9 @@ import {
   addUserMintsToNFTs,
   checkIfLastPage,
   filterNFTsByPage,
+  filterNFTsBySchemas,
   filterTemplatesByName,
+  removeItemOnce,
 } from "../helper";
 import { RootState } from "../store";
 import { IMints } from "./userSlice";
@@ -33,7 +35,7 @@ export interface NFTsState {
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
   search: string;
-  schemas: string[];
+  schemasFilter: string[];
 }
 
 const initialState: NFTsState = {
@@ -43,7 +45,7 @@ const initialState: NFTsState = {
   status: "idle",
   error: null,
   search: "",
-  schemas: [],
+  schemasFilter: [],
 };
 
 export const fetchAllNFTs = createAsyncThunk<NFT[], void>(
@@ -81,15 +83,39 @@ export const NFTsSlice = createSlice({
     icreasePage: (state) => {
       state.page = state.page + 1;
       if (
+        //check if this is the last page - should stop the indicator
         checkIfLastPage(
           state.data,
           templatesInterval,
           state.page,
           state.search,
-          state.schemas
+          state.schemasFilter
         )
       )
         state.hasMore = false;
+    },
+    addSchemaToFilter: (state, action: PayloadAction<string>) => {
+      state.schemasFilter.push(action.payload);
+      state.search = "";
+      state.hasMore = true;
+      state.page = 1;
+    },
+    clearSchemaFromFilter: (state, action: PayloadAction<string>) => {
+      state.schemasFilter = removeItemOnce(state.schemasFilter, action.payload);
+      state.search = "";
+      state.hasMore = true;
+      state.page = 1;
+    },
+    toggleSchemaFilter: (state, action: PayloadAction<string>) => {
+      if (state.schemasFilter.includes(action.payload))
+        state.schemasFilter = removeItemOnce(
+          state.schemasFilter,
+          action.payload
+        );
+      else state.schemasFilter.push(action.payload);
+      state.search = "";
+      state.hasMore = true;
+      state.page = 1;
     },
   },
   extraReducers: (builder) => {
@@ -125,17 +151,20 @@ export const NFTsSelector = createSelector<
   RootState,
   NFT[],
   string,
+  string[],
   number,
   NFT[]
 >(
   [
     (state) => state.NFTs.data,
     (state) => state.NFTs.search,
+    (state) => state.NFTs.schemasFilter,
     (state) => state.NFTs.page,
   ],
-  (NFTs, search, page) => {
+  (NFTs, search, schemasFilter, page) => {
     let res: NFT[] = NFTs;
     if (search.length > 0) res = filterTemplatesByName(NFTs, search); //filter by search
+    if (schemasFilter.length > 0) res = filterNFTsBySchemas(res, schemasFilter); //filter by schemas
     res = filterNFTsByPage(res, templatesInterval, page); //limit results amount
     return res;
   }
@@ -146,6 +175,9 @@ export const {
   getSchemas,
   filterByName,
   icreasePage,
+  addSchemaToFilter,
+  clearSchemaFromFilter,
+  toggleSchemaFilter,
 } = NFTsSlice.actions;
 
 export default NFTsSlice.reducer;

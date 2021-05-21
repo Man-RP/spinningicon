@@ -67,39 +67,41 @@ const NavBar = () => {
           >
             SpinningIcons
           </Typography>
-          {!userName ? (
-            <Button onClick={() => handleLoginClick()} color="inherit">
-              Login
-            </Button>
-          ) : (
-            <div>
-              <Button
-                style={{ textTransform: "none" }}
-                color="inherit"
-                onClick={handleMenu}
-              >
-                {userName}
+          {userStatus !== "loading" &&
+            userStatus !== "init" &&
+            (!userName ? (
+              <Button onClick={() => handleLoginClick()} color="inherit">
+                Login
               </Button>
-              <Menu
-                id="menu-appbar"
-                disableScrollLock
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={open}
-                onClose={handleClose}
-              >
-                <MenuItem onClick={handleLogoutClick}>Logout</MenuItem>
-              </Menu>
-            </div>
-          )}
+            ) : (
+              <div>
+                <Button
+                  style={{ textTransform: "none" }}
+                  color="inherit"
+                  onClick={handleMenu}
+                >
+                  {userName}
+                </Button>
+                <Menu
+                  id="menu-appbar"
+                  disableScrollLock
+                  anchorEl={anchorEl}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={open}
+                  onClose={handleClose}
+                >
+                  <MenuItem onClick={handleLogoutClick}>Logout</MenuItem>
+                </Menu>
+              </div>
+            ))}
         </Toolbar>
       </AppBar>
     </>

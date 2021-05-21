@@ -59,7 +59,9 @@ export const userSclice = createSlice({
       state.userFetchStatus = "loading";
     });
     builder.addCase(fetchUser.fulfilled, (state, action) => {
-      state.userFetchStatus = "succeeded";
+      if (action.payload === undefined) state.userFetchStatus = "idle";
+      else state.userFetchStatus = "succeeded";
+
       state.userName = action.payload;
     });
     builder.addCase(fetchUser.rejected, (state, action) => {

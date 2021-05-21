@@ -1,10 +1,15 @@
-import { Container, makeStyles, Typography } from "@material-ui/core";
+import {
+  Chip,
+  Container,
+  Grid,
+  makeStyles,
+  Typography,
+} from "@material-ui/core";
 import React from "react";
+import { useAppDispatch, useAppSelector } from "../../hooks/storeHooks";
+import { toggleSchemaFilter } from "../../reducers/NFTsSlice";
 
 const useStyles = makeStyles((theme) => ({
-  icon: {
-    marginRight: theme.spacing(2),
-  },
   heroContent: {
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(8, 0, 6),
@@ -25,9 +30,40 @@ const useStyles = makeStyles((theme) => ({
 const Hero = () => {
   const classes = useStyles();
 
+  const schemas = useAppSelector((state) => state.schemas.data);
+
+  const dispatch = useAppDispatch();
+
+  const handleToggleSchema = (schema: string) => {
+    dispatch(toggleSchemaFilter(schema));
+  };
+
+  const schemasFilter = useAppSelector((state) => state.NFTs.schemasFilter);
+
+  const SchemaChip: ({
+    schemaName,
+    filterOn,
+    onClick,
+  }: {
+    schemaName: string;
+    filterOn: boolean;
+    onClick: React.MouseEventHandler<HTMLDivElement> | undefined;
+  }) => JSX.Element = ({ schemaName, filterOn, onClick }) => {
+    return (
+      <>
+        <Chip
+          label={schemaName}
+          clickable
+          color={filterOn ? "secondary" : "primary"}
+          onClick={onClick}
+        />
+      </>
+    );
+  };
+
   return (
     <div className={classes.heroContent}>
-      <Container maxWidth="sm">
+      <Container maxWidth="md">
         <Typography
           component="h1"
           variant="h2"
@@ -38,17 +74,33 @@ const Hero = () => {
           SpinningIcons
         </Typography>
         <Typography variant="h5" align="center" color="textSecondary" paragraph>
-          Welcome to my beautiful site
+          Welcome to the Biggest Coin Collection on the Wax Platform!
         </Typography>
-        {/* <div className={classes.heroButtons}>
-          <Grid container spacing={2} justify="center">
-            {schemas.map((schema, index) => (
-              <Grid item>
-                <Chip label={schema} clickable color="primary" />
+        <div className={classes.heroButtons}>
+          {schemas.length > 0 && (
+            <>
+              <Typography
+                variant="subtitle2"
+                align="center"
+                color="textSecondary"
+                paragraph
+              >
+                Our Schemas:
+              </Typography>
+              <Grid container spacing={1} justify="center">
+                {schemas.map((schema, index) => (
+                  <Grid item key={index}>
+                    <SchemaChip
+                      schemaName={schema}
+                      filterOn={schemasFilter.includes(schema)}
+                      onClick={() => handleToggleSchema(schema)}
+                    />
+                  </Grid>
+                ))}
               </Grid>
-            ))}
-          </Grid>
-        </div> */}
+            </>
+          )}
+        </div>
       </Container>
     </div>
   );

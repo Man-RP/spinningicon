@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: "2px 4px",
       display: "flex",
       alignItems: "center",
-      width: 200,
+      width: theme.spacing(28),
     },
     input: {
       marginLeft: theme.spacing(1),
@@ -46,7 +46,7 @@ const Search = () => {
     <Paper component="form" className={classes.root}>
       <InputBase
         className={classes.input}
-        placeholder="Search"
+        placeholder="Search.."
         inputProps={{ "aria-label": "Search" }}
         onChange={handleSearch}
       />

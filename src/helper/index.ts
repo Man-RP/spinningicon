@@ -18,20 +18,18 @@ export const addUserMintsToNFTs: (NFTs: NFT[], mints: IMints) => NFT[] = (
   return res;
 };
 
-export const getTemplateMint: (
-  templateId: string,
-  mintsObj: IMints
-) => string = (templateId, mintsObj) => {
-  const userTemplateIds = Object.keys(mintsObj);
-  for (let userTemplate of userTemplateIds) {
-    if (userTemplate === templateId) return mintsObj[userTemplate];
-  }
-  return "-1";
-};
+export const getTemplateMint: (templateId: string, mintsObj: IMints) => string =
+  (templateId, mintsObj) => {
+    const userTemplateIds = Object.keys(mintsObj);
+    for (let userTemplate of userTemplateIds) {
+      if (userTemplate === templateId) return mintsObj[userTemplate];
+    }
+    return "-1";
+  };
 
 export const filterNFTsBySchemas: (
   NFTs: NFT[],
-  collections: string[] | string
+  schemas: string[] | string
 ) => NFT[] = (NFTs, schemas) => {
   let res: NFT[] = [];
   res = NFTs.filter((item) => {
@@ -84,4 +82,15 @@ export const checkIfLastPage: (
     templatesArray = filterNFTsBySchemas(templatesArray, schemas);
   if (interval * page >= templatesArray.length) return true;
   return false;
+};
+
+export const removeItemOnce: (arr: string[], value: string) => string[] = (
+  arr,
+  value
+) => {
+  var index = arr.indexOf(value);
+  if (index > -1) {
+    arr.splice(index, 1);
+  }
+  return arr;
 };
