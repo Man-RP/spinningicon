@@ -39,7 +39,7 @@ export const fetchUserMints = createAsyncThunk<
   }
 >("user/fetchUserMints", async (temp, thunkAPI) => {
   const { userName } = thunkAPI.getState().user;
-  if (userName) return await getUserMints();
+  if (userName) return await getUserMints(userName);
   return undefined;
 });
 
