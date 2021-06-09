@@ -1,8 +1,11 @@
+import React from "react";
 import {
   Card,
   CardActions,
   CardContent,
   CardMedia,
+  CardMediaProps,
+  CardMediaTypeMap,
   Chip,
   IconButton,
   makeStyles,
@@ -13,8 +16,8 @@ import CheckIcon from "@material-ui/icons/Check";
 import CloseIcon from "@material-ui/icons/Close";
 import InfoIcon from "@material-ui/icons/Info";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
-import React from "react";
 import { NFT } from "../../reducers/NFTsSlice";
+import { OverridableComponent } from "@material-ui/core/OverridableComponent";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -23,7 +26,8 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
   },
   cardMedia: {
-    paddingTop: "75.25%",
+    height: 250,
+    backgroundSize: "contain",
   },
   cardContent: {
     flexGrow: 1,
@@ -110,8 +114,9 @@ const NftCard = (props: NFT) => {
       <CardMedia
         className={classes.cardMedia}
         image={"https://cloudflare-ipfs.com/ipfs/" + img}
-        title="Template image"
+        title="Template Image"
       />
+
       <CardContent className={classes.cardContent}>
         <Typography
           gutterBottom
