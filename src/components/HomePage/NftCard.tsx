@@ -4,8 +4,6 @@ import {
   CardActions,
   CardContent,
   CardMedia,
-  CardMediaProps,
-  CardMediaTypeMap,
   Chip,
   IconButton,
   makeStyles,
@@ -17,7 +15,6 @@ import CloseIcon from "@material-ui/icons/Close";
 import InfoIcon from "@material-ui/icons/Info";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import { NFT } from "../../reducers/NFTsSlice";
-import { OverridableComponent } from "@material-ui/core/OverridableComponent";
 
 const useStyles = makeStyles((theme) => ({
   card: {
