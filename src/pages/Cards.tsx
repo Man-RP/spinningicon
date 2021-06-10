@@ -19,9 +19,14 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: theme.spacing(8),
     paddingBottom: theme.spacing(8),
   },
-  search: {
+  searchContainer: {
     display: "flex",
     justifyContent: "flex-end",
+  },
+  circularProgress: {
+    display: "flex",
+    justifyContent: "center",
+    paddingTop: 50,
   },
 }));
 
@@ -41,7 +46,7 @@ const Cards = () => {
   useEffect(() => {
     if (schemasStatus === "idle") dispatch(fetchAllSchemas());
     if (cardsStatus === "idle") dispatch(fetchAllNFTs());
-  }, [cardsStatus, schemasStatus, dispatch]);
+  }, [mints]);
 
   const ScrollFetchWrapper: ({
     children,
@@ -54,13 +59,7 @@ const Cards = () => {
       next={handleNextScroll}
       hasMore={hasMore}
       loader={
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            paddingTop: 50,
-          }}
-        >
+        <div className={classes.circularProgress}>
           <CircularProgress />
         </div>
       }
@@ -73,7 +72,7 @@ const Cards = () => {
     <>
       <Hero />
       <Container className={classes.cardGrid} maxWidth="lg">
-        <div className={classes.search}>
+        <div className={classes.searchContainer}>
           <Search />
         </div>
         <ScrollFetchWrapper>

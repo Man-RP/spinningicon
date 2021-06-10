@@ -84,7 +84,7 @@ export const waxLogin = async () => {
   return (await wax.login()) as string;
 };
 
-export const getUserMints = async () => {
+export const getUserMints = async (userName: string) => {
   const res: IMints = {};
   const api = new ExplorerApi(
     "https://wax.api.atomicassets.io",
@@ -93,13 +93,13 @@ export const getUserMints = async () => {
   );
 
   const rawAssetsObject = await api.getAssets({
-    schema_name: "spinningcoin",
+    owner: userName,
   });
 
   for (let asset of rawAssetsObject) {
     const templateId = asset.template?.template_id;
     const mintNumber = asset.template?.issued_supply;
-    if (typeof templateId === "string" && typeof mintNumber === "number")
+    if (typeof templateId === "string" && typeof mintNumber === "string")
       res[templateId] = mintNumber;
   }
 
