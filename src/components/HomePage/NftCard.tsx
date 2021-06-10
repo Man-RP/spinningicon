@@ -145,7 +145,14 @@ const NftCard = (props: NFT) => {
           </Tooltip>
         </IconButton>
         <div style={{ flexGrow: 1 }}>
-          <IconButton aria-label="open template's page in bloks">
+          <IconButton
+            aria-label="open template's page in bloks"
+            target="_blank"
+            href={
+              "https://wax.atomichub.io/explorer/template/spinningicon/" +
+              templateId
+            }
+          >
             <OpenInNewIcon />
           </IconButton>
         </div>
