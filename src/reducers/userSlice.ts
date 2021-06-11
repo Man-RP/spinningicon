@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { getUserMints, tryLoginWaxOnSetUp, waxLogin } from "../api";
-import { RootState } from "../store";
 
 export interface IMints {
   [templateId: string]: string;
@@ -9,7 +8,6 @@ export interface UserState {
   userName: string | undefined;
   mints: IMints | undefined;
   userFetchStatus: "init" | "idle" | "loading" | "succeeded" | "failed";
-  mintsFetchStatus: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
 }
 
@@ -17,30 +15,19 @@ const initialState: UserState = {
   userName: undefined,
   mints: undefined,
   userFetchStatus: "init",
-  mintsFetchStatus: "idle",
   error: null,
 };
 
-export const fetchUser = createAsyncThunk<string | undefined, boolean>(
-  "user/fetchUser",
-  async (init: boolean, thunkAPI) => {
-    let user: string | undefined = undefined;
-    if (init) user = await tryLoginWaxOnSetUp();
-    else user = await waxLogin();
-    return user;
-  }
-);
-
-export const fetchUserMints = createAsyncThunk<
-  IMints | undefined,
-  void,
-  {
-    state: RootState;
-  }
->("user/fetchUserMints", async (temp, thunkAPI) => {
-  const { userName } = thunkAPI.getState().user;
-  if (userName) return await getUserMints(userName);
-  return undefined;
+export const fetchUser = createAsyncThunk<
+  [string | undefined, IMints | undefined],
+  boolean
+>("user/fetchUser", async (init: boolean, thunkAPI) => {
+  let user: string | undefined = undefined;
+  let mints: IMints | undefined = undefined;
+  if (init) user = await tryLoginWaxOnSetUp();
+  else user = await waxLogin();
+  if (user) mints = await getUserMints(user);
+  return [user, mints];
 });
 
 export const userSclice = createSlice({
@@ -51,7 +38,6 @@ export const userSclice = createSlice({
       state.userName = undefined;
       state.mints = undefined;
       state.userFetchStatus = "idle";
-      state.mintsFetchStatus = "idle";
     },
   },
   extraReducers: (builder) => {
@@ -62,21 +48,11 @@ export const userSclice = createSlice({
       if (action.payload === undefined) state.userFetchStatus = "idle";
       else state.userFetchStatus = "succeeded";
 
-      state.userName = action.payload;
+      state.userName = action.payload[0];
+      state.mints = action.payload[1];
     });
     builder.addCase(fetchUser.rejected, (state, action) => {
       state.userFetchStatus = "failed";
-      state.error = action.error.message ? action.error.message : null;
-    });
-    builder.addCase(fetchUserMints.pending, (state, action) => {
-      state.mintsFetchStatus = "loading";
-    });
-    builder.addCase(fetchUserMints.fulfilled, (state, action) => {
-      state.mintsFetchStatus = "succeeded";
-      state.mints = action.payload;
-    });
-    builder.addCase(fetchUserMints.rejected, (state, action) => {
-      state.mintsFetchStatus = "failed";
       state.error = action.error.message ? action.error.message : null;
     });
   },
