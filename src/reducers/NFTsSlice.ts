@@ -4,11 +4,12 @@ import {
   createSlice,
   PayloadAction,
 } from "@reduxjs/toolkit";
-import { getAllTemplates, getTemplatesByPage } from "../api";
+import { getAllTemplates, getUserMints } from "../api";
 import { templatesInterval } from "../consts/consts";
 import {
-  addUserMintsToNFTs,
+  addMintsToTemplatesHelper,
   checkIfLastPage,
+  clearMintsFromTemplatesHelper,
   filterNFTsByPage,
   filterNFTsBySchemas,
   filterTemplatesByName,
@@ -48,33 +49,27 @@ const initialState: NFTsState = {
   schemasFilter: [],
 };
 
-export const fetchAllNFTs = createAsyncThunk<NFT[], void>(
-  "NFTs/fetchAllNFTs",
-  async () => {
-    let NFTs: NFT[] = await getAllTemplates();
-    return NFTs as NFT[];
+export const fetchAllNFTs = createAsyncThunk<
+  NFT[],
+  void,
+  {
+    state: RootState;
   }
-);
-
-export const fetchNFTs = createAsyncThunk<NFT[], void, { state: RootState }>(
-  "NFTs/fetchNFTs",
-  async (dummy, thunkApi) => {
-    const { page } = thunkApi.getState().NFTs;
-    let NFTs: NFT[] = await getTemplatesByPage(page);
-    return NFTs as NFT[];
+>("NFTs/fetchAllNFTs", async (temp, thunkAPI) => {
+  let NFTs: NFT[] = await getAllTemplates(); //fetch all templates
+  const user = thunkAPI.getState().user.userName;
+  //if user is already authenticated - fetch his assets and add mints to templates
+  if (user && NFTs.length > 0) {
+    const mints = await getUserMints(user);
+    NFTs = addMintsToTemplatesHelper(NFTs, mints);
   }
-);
+  return NFTs as NFT[];
+});
 
 export const NFTsSlice = createSlice({
   name: "NFTs",
   initialState,
   reducers: {
-    addUserMints: (state, action: PayloadAction<IMints>) => {
-      state.data = addUserMintsToNFTs(state.data, action.payload);
-    },
-    getSchemas: (state, action: PayloadAction<IMints>) => {
-      state.data = addUserMintsToNFTs(state.data, action.payload);
-    },
     filterByName: (state, action: PayloadAction<string>) => {
       state.search = action.payload;
       state.hasMore = true;
@@ -94,18 +89,6 @@ export const NFTsSlice = createSlice({
       )
         state.hasMore = false;
     },
-    addSchemaToFilter: (state, action: PayloadAction<string>) => {
-      state.schemasFilter.push(action.payload);
-      state.search = "";
-      state.hasMore = true;
-      state.page = 1;
-    },
-    clearSchemaFromFilter: (state, action: PayloadAction<string>) => {
-      state.schemasFilter = removeItemOnce(state.schemasFilter, action.payload);
-      state.search = "";
-      state.hasMore = true;
-      state.page = 1;
-    },
     toggleSchemaFilter: (state, action: PayloadAction<string>) => {
       if (state.schemasFilter.includes(action.payload))
         state.schemasFilter = removeItemOnce(
@@ -117,6 +100,12 @@ export const NFTsSlice = createSlice({
       state.hasMore = true;
       state.page = 1;
     },
+    addMintsToTemplates: (state, action: PayloadAction<IMints>) => {
+      state.data = addMintsToTemplatesHelper(state.data, action.payload);
+    },
+    clearMintsFromTemplates: (state) => {
+      state.data = clearMintsFromTemplatesHelper(state.data);
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchAllNFTs.pending, (state, action) => {
@@ -127,20 +116,6 @@ export const NFTsSlice = createSlice({
       state.data = action.payload;
     });
     builder.addCase(fetchAllNFTs.rejected, (state, action) => {
-      state.status = "failed";
-      state.error = action.error.message ? action.error.message : null;
-    });
-    builder.addCase(fetchNFTs.pending, (state, action) => {
-      state.status = "loading";
-    });
-    builder.addCase(fetchNFTs.fulfilled, (state, action) => {
-      state.status = "succeeded";
-      if (action.payload.length > 0) {
-        state.data = state.data.concat(action.payload);
-        state.page++;
-      } else state.hasMore = false;
-    });
-    builder.addCase(fetchNFTs.rejected, (state, action) => {
       state.status = "failed";
       state.error = action.error.message ? action.error.message : null;
     });
@@ -171,13 +146,11 @@ export const NFTsSelector = createSelector<
 );
 
 export const {
-  addUserMints,
-  getSchemas,
   filterByName,
   icreasePage,
-  addSchemaToFilter,
-  clearSchemaFromFilter,
   toggleSchemaFilter,
+  addMintsToTemplates,
+  clearMintsFromTemplates,
 } = NFTsSlice.actions;
 
 export default NFTsSlice.reducer;

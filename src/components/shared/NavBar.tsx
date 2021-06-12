@@ -10,7 +10,7 @@ import {
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { useAppDispatch, useAppSelector } from "../../hooks/storeHooks";
-import { fetchUser, logout } from "../../reducers/userSlice";
+import { fetchUser, logoutUser } from "../../reducers/userSlice";
 import logo from "../../assets/logo.jpg";
 
 const useStyles = makeStyles((theme) => ({
@@ -42,7 +42,7 @@ const NavBar = () => {
   };
 
   const handleLogoutClick = async () => {
-    dispatch(logout());
+    dispatch(logoutUser());
     handleClose();
   };
 

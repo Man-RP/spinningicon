@@ -94,3 +94,29 @@ export const removeItemOnce: (arr: string[], value: string) => string[] = (
   }
   return arr;
 };
+
+//add 'mint' field to each template object in the array according to the mints object
+//BONUS: put user's assets at the beginning of the array
+export const addMintsToTemplatesHelper: (
+  NFTs: NFT[],
+  mintsObj: IMints
+) => NFT[] = (NFTs, mintsObj) => {
+  let res: NFT[] = [];
+  const templatesUserHas = Object.keys(mintsObj);
+  for (let template of NFTs) {
+    if (templatesUserHas.includes(template.templateId))
+      res.unshift({ ...template, mint: mintsObj[template.templateId] });
+    else res.push({ ...template, mint: "-1" });
+  }
+  return res;
+};
+
+//clear 'mint' field from each template object in the array.
+export const clearMintsFromTemplatesHelper: (NFTs: NFT[]) => NFT[] = (NFTs) => {
+  let res: NFT[] = [];
+  for (let template of NFTs) {
+    const { mint, ...other } = template;
+    res.push(other);
+  }
+  return res;
+};

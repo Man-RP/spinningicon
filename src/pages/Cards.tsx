@@ -9,7 +9,6 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import Hero from "../components/HomePage/Hero";
 import NftCard from "../components/HomePage/NftCard";
 import Search from "../components/HomePage/Search";
-import { getTemplateMint } from "../helper";
 import { useAppDispatch, useAppSelector } from "../hooks/storeHooks";
 import { fetchAllNFTs, icreasePage, NFTsSelector } from "../reducers/NFTsSlice";
 import { fetchAllSchemas } from "../reducers/schemasSlice";
@@ -34,7 +33,6 @@ const Cards = () => {
   const classes = useStyles();
 
   const NFTs = useAppSelector(NFTsSelector);
-  const mints = useAppSelector((state) => state.user.mints);
   const cardsStatus = useAppSelector((state) => state.NFTs.status);
   const schemasStatus = useAppSelector((state) => state.schemas.status);
   const hasMore = useAppSelector((state) => state.NFTs.hasMore);
@@ -46,7 +44,7 @@ const Cards = () => {
   useEffect(() => {
     if (schemasStatus === "idle") dispatch(fetchAllSchemas());
     if (cardsStatus === "idle") dispatch(fetchAllNFTs());
-  }, [mints]);
+  }, [schemasStatus, cardsStatus, dispatch]);
 
   const ScrollFetchWrapper: ({
     children,
@@ -79,10 +77,7 @@ const Cards = () => {
           <Grid container spacing={3}>
             {NFTs.map((NFT, index) => (
               <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
-                <NftCard
-                  {...NFT}
-                  mint={mints && getTemplateMint(NFT.templateId, mints)}
-                />
+                <NftCard {...NFT} />
               </Grid>
             ))}
           </Grid>
