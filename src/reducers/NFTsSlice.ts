@@ -12,6 +12,7 @@ import {
   filterNFTsByPage,
   filterNFTsBySchemas,
   filterTemplatesByName,
+  moveAssetsToStart,
   removeItemOnce,
 } from "../helper";
 import { RootState } from "../store";
@@ -153,6 +154,7 @@ export const NFTsSelector = createSelector<
   string,
   string[],
   number,
+  IMints | undefined,
   NFT[]
 >(
   [
@@ -160,9 +162,12 @@ export const NFTsSelector = createSelector<
     (state) => state.NFTs.search,
     (state) => state.NFTs.schemasFilter,
     (state) => state.NFTs.page,
+    (state) => state.user.mints,
   ],
-  (NFTs, search, schemasFilter, page) => {
+  (NFTs, search, schemasFilter, page, mints) => {
     let res: NFT[] = NFTs;
+    if (mints && Object.keys(mints).length > 0)
+      res = moveAssetsToStart(NFTs, mints);
     if (search.length > 0) res = filterTemplatesByName(NFTs, search); //filter by search
     if (schemasFilter.length > 0) res = filterNFTsBySchemas(res, schemasFilter); //filter by schemas
     res = filterNFTsByPage(res, templatesInterval, page); //limit results amount

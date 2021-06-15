@@ -94,3 +94,15 @@ export const removeItemOnce: (arr: string[], value: string) => string[] = (
   }
   return arr;
 };
+
+export const moveAssetsToStart: (templates: NFT[], mintsObj: IMints) => NFT[] =
+  (templates, mintsObj) => {
+    const res: NFT[] = [...templates];
+    const assetsTemplateId = Object.keys(mintsObj);
+    res.sort((a, b) => {
+      if (assetsTemplateId.includes(a.templateId)) return -1;
+      else if (assetsTemplateId.includes(b.templateId)) return 1;
+      else return 0;
+    });
+    return res;
+  };

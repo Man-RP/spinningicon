@@ -11,7 +11,6 @@ import {
   Typography,
 } from "@material-ui/core";
 import CheckIcon from "@material-ui/icons/Check";
-import CloseIcon from "@material-ui/icons/Close";
 import InfoIcon from "@material-ui/icons/Info";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import { NFT } from "../../reducers/NFTsSlice";
@@ -75,36 +74,12 @@ const NftCard = (props: NFT) => {
     templateName,
     templateId,
     schemeName,
-    collectionName: collection,
+    collectionName,
     description,
     img,
     maxSupply,
     mint,
   } = props;
-
-  const MintChip: ({ mint }: { mint: string | undefined }) => JSX.Element = ({
-    mint,
-  }) => {
-    return (
-      <>
-        {mint !== "-1" ? (
-          <Chip
-            label={`Mint: ${mint}`}
-            color="primary"
-            icon={<CheckIcon />}
-            classes={{ root: classes.chip }}
-          />
-        ) : (
-          <Chip
-            label={`Not owned`}
-            color="secondary"
-            icon={<CloseIcon />}
-            classes={{ root: classes.chip }}
-          />
-        )}
-      </>
-    );
-  };
 
   return (
     <Card className={classes.card}>
@@ -138,7 +113,7 @@ const NftCard = (props: NFT) => {
                 description={description}
                 templateId={templateId}
                 maxSupply={maxSupply}
-                collectionName={collection}
+                collectionName={collectionName}
               />
             }
             placement="left-end"
@@ -158,7 +133,14 @@ const NftCard = (props: NFT) => {
             <OpenInNewIcon />
           </IconButton>
         </div>
-        {mint && <MintChip mint={mint} />}
+        {mint && mint !== "-1" && (
+          <Chip
+            label={`Mint: ${mint}`}
+            color="secondary"
+            icon={<CheckIcon />}
+            classes={{ root: classes.chip }}
+          />
+        )}
       </CardActions>
     </Card>
   );

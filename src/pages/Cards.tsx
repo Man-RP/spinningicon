@@ -1,10 +1,10 @@
+import React, { ReactChild, useEffect } from "react";
 import {
   CircularProgress,
   Container,
   Grid,
   makeStyles,
 } from "@material-ui/core";
-import React, { ReactChild, useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Hero from "../components/HomePage/Hero";
 import NftCard from "../components/HomePage/NftCard";
@@ -46,7 +46,7 @@ const Cards = () => {
   useEffect(() => {
     if (schemasStatus === "idle") dispatch(fetchAllSchemas());
     if (cardsStatus === "idle") dispatch(fetchAllNFTs());
-  }, [mints]);
+  }, [schemasStatus, cardsStatus, dispatch]);
 
   const ScrollFetchWrapper: ({
     children,
