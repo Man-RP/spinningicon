@@ -143,7 +143,7 @@ const NftCard = (props: NFT) => {
             }
             placement="left-end"
           >
-            <InfoIcon />
+            <InfoIcon aria-label="show-tooltip" />
           </Tooltip>
         </IconButton>
         <div style={{ flexGrow: 1 }}>
